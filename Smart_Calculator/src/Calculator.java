@@ -326,10 +326,10 @@ public class Calculator extends javax.swing.JFrame {
                parastash = txtResult.getText();
                Double finalResult = 0.0 ;
                
+               
                if(parastash.contains("+"))
                {
                    System.out.println("tru +");
-                   
                    finalResult = calculateResult("+",parastash);
                    
                }
