@@ -1,4 +1,4 @@
-
+//
 import javax.swing.JOptionPane;
 
 /*
@@ -15,7 +15,9 @@ public class Calculator extends javax.swing.JFrame {
     /**
      * Creates new form Calculator
      */
-    public static String Mode ="Normal" ;
+    public  static String Mode ="Normal" ;
+    private String parastash = null;
+            
     public Calculator() 
     {
         initComponents();
@@ -321,19 +323,33 @@ public class Calculator extends javax.swing.JFrame {
            {
                //Expert method to find the result
 
-               String parastash = txtResult.getText();
-
-               String operator = evt.getActionCommand();
-               System.out.println(operator);
-    //           Double number = 0.0;
-    //           switch(operator)
-    //           {
-    //               case "+" :
-    //                   String[] result= parastash.split("\\+");
-    //                   int index = parastash.indexOf("\\+");
-    //                   System.out.println(index);
-    //                   break;
-    //           }
+               parastash = txtResult.getText();
+               Double finalResult = 0.0 ;
+               
+               if(parastash.contains("+"))
+               {
+                   System.out.println("tru +");
+                   
+                   finalResult = calculateResult("+",parastash);
+                   
+               }
+               if(parastash.contains("-"))
+               {
+                   System.out.println("tru -");
+                   finalResult = calculateResult("-",parastash);
+               }
+               if(parastash.contains("*"))
+               {
+                   System.out.println("tru *");
+                   finalResult = calculateResult("*",parastash);
+               }
+               if(parastash.contains("/"))
+               {
+                   System.out.println("tue /");
+                   finalResult = calculateResult("/",parastash);
+               }
+               
+               txtResult.setText(String.valueOf(finalResult));
            }
            else
            {
@@ -342,6 +358,30 @@ public class Calculator extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_btnEqualsActionPerformed
 
+    
+    private Double calculateResult(String operator,String txtToCalculate)
+    {
+        String result[] = txtToCalculate.split("\\"+operator);
+        Double finalResult = 0.0;
+        switch(operator)
+        {
+            case "+":
+                 finalResult = Double.parseDouble( result[0] ) + Double.parseDouble( result[1] ) ;
+                break;
+            case "-":
+                 finalResult = Double.parseDouble( result[0] ) - Double.parseDouble( result[1] ) ;
+                break;    
+            case "*":
+                 finalResult = Double.parseDouble( result[0] ) * Double.parseDouble( result[1] ) ;
+                break;
+            case "/":
+                 finalResult = Double.parseDouble( result[0] ) / Double.parseDouble( result[1] ) ;
+                break;
+        }
+        
+        return finalResult;
+        
+    }
     /**
      * @param args the command line arguments
      */
