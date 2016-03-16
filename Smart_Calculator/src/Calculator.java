@@ -197,6 +197,11 @@ public class Calculator extends javax.swing.JFrame {
         });
 
         btnProduct.setText("n!");
+        btnProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductActionPerformed(evt);
+            }
+        });
 
         btnLeftBracket.setText("(");
         btnLeftBracket.setEnabled(false);
@@ -215,6 +220,11 @@ public class Calculator extends javax.swing.JFrame {
         });
 
         btnSquareRoot.setText("sqrt()");
+        btnSquareRoot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSquareRootActionPerformed(evt);
+            }
+        });
 
         btnBackSpace.setText("Bckspace");
         btnBackSpace.addActionListener(new java.awt.event.ActionListener() {
@@ -346,8 +356,7 @@ public class Calculator extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                             .addComponent(btnSix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnFive, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnFour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(btnFour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(38, 38, 38)
@@ -551,7 +560,34 @@ public class Calculator extends javax.swing.JFrame {
           
     }//GEN-LAST:event_txtForCalculationKeyTyped
 
-    
+    private void btnProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductActionPerformed
+        // TODO add your handling code here:
+        int number = Integer.parseInt(txtForCalculation.getText());
+        int res = 0;
+        res = calculateProduct(number);
+        txtForCalculation.setText(String.valueOf(res));
+        state = true;
+    }//GEN-LAST:event_btnProductActionPerformed
+
+    private void btnSquareRootActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSquareRootActionPerformed
+        // TODO add your handling code here:
+        Double tmp = Math.sqrt(Double.parseDouble(txtForCalculation.getText()));
+        tmp = (double) Math.round(tmp * 100) / 100;
+        txtForCalculation.setText(String.valueOf(tmp));
+        state = true;
+        
+    }//GEN-LAST:event_btnSquareRootActionPerformed
+
+    private int calculateProduct(int number)
+    {
+        int temp=1;
+        if(number==0)
+        {
+            return temp;
+        }
+        else temp = number*calculateProduct(number-1);
+        return temp;
+    }
     private Double calculateResult(String txtToCalculate)
     {
         Double finalResult = 0.0;
