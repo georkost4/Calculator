@@ -19,13 +19,12 @@ public class Calculator extends javax.swing.JFrame {
      */
     public  static String Mode ="Normal" ;
     private static Double count = 0.0;
-    private static String operation = null;
+    private static String operator = null;
     private static Double number1=0.0,number2=0.0;
     private static Boolean state = false;
-    private String reg = "\\d+(.\\d+)?+";
+    private String reg = "\\-?\\d+(.\\d+)?+";
     private static ArrayList<String> listWithNumbers = new ArrayList<String>();
     private static ArrayList<String> Operators       = new ArrayList<String>();
-    private static ArrayList<String> Expression      = new ArrayList<String>();
             
     public Calculator() 
     {
@@ -66,9 +65,10 @@ public class Calculator extends javax.swing.JFrame {
         btnBackSpace = new javax.swing.JButton();
         btnMode = new javax.swing.JButton();
         txtMode = new javax.swing.JTextField();
-        txtWholeExpression = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(0, 0));
+        setResizable(false);
 
         btnTwo.setText("2");
         btnTwo.addActionListener(new java.awt.event.ActionListener() {
@@ -286,9 +286,9 @@ public class Calculator extends javax.swing.JFrame {
                                         .addComponent(btnZero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnSeven, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(btnFour, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(btnFour, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                                            .addComponent(btnSeven, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGap(0, 0, Short.MAX_VALUE)))
                                 .addGap(18, 18, 18)
                                 .addComponent(btnDot, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -304,15 +304,9 @@ public class Calculator extends javax.swing.JFrame {
                             .addComponent(btnPlus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnMinus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(txtForCalculation)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(txtWholeExpression, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(58, 58, 58)))
+                        .addGap(24, 24, 24)
+                        .addComponent(txtForCalculation)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBackSpace)))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
@@ -353,7 +347,7 @@ public class Calculator extends javax.swing.JFrame {
                             .addComponent(btnSix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnFive, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnFour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(38, 38, 38)
@@ -376,9 +370,7 @@ public class Calculator extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addComponent(btnDivision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(86, 86, 86)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtWholeExpression, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74))
+                .addGap(31, 31, 31))
         );
 
         pack();
@@ -426,8 +418,6 @@ public class Calculator extends javax.swing.JFrame {
 
     private void btnEqualsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEqualsActionPerformed
       
-        
-        String textToCalculate = txtForCalculation.getText();
         Double result = 0.0 ;
         
         if(txtForCalculation.getText().equals(""))
@@ -441,30 +431,42 @@ public class Calculator extends javax.swing.JFrame {
             {
                 // Expert method of calculating the result .
                 
-               
-                calculateExpression();
-                System.out.println("List "+listWithNumbers.toString());
-                System.out.println("Operators "+Operators.toString());
-
-                
-                if(Operators.isEmpty()) result = Double.parseDouble(listWithNumbers.get(0));
-
-                for(int i=0;i<Operators.size();i++)
+                String desiredFormat = "\\(\\-?\\d+(.\\d+)?[\\+\\-\\/\\*]\\-?\\d+(.\\d+)?\\)([\\+\\-\\/\\*]\\(\\-?\\d+(.\\d+)?[\\+\\-\\/\\*]\\-?\\d+(.\\d+)?\\))?" ;
+                if(txtForCalculation.getText().trim().matches(desiredFormat))
                 {
-                    String stringToCalculate = listWithNumbers.get(i)+Operators.get(i)+listWithNumbers.get(i+1);
-                    result = calculateResult(stringToCalculate);
+                    calculateExpression();
+                    System.out.println("List "+listWithNumbers.toString());
+                    System.out.println("Operators "+Operators.toString());
 
-                    System.out.println("Result:"+String.valueOf(result));
-                    System.out.println("Method inputs:"+String.valueOf(stringToCalculate));
+                    
+                    // True only if something like this is typed (a+b) .
+                    if(Operators.isEmpty()) result = Double.parseDouble(listWithNumbers.get(0));
 
-                    listWithNumbers.set(i+1, String.valueOf(result));
+                    // Iterate through operators list .
+                    for(int i=0;i<Operators.size();i++)
+                    {
+                        // Constuct a string with the first  the operator and the second number .
+                        String stringToCalculate = listWithNumbers.get(i)+Operators.get(i)+listWithNumbers.get(i+1);
+                        result = calculateResult(stringToCalculate);
+
+                        System.out.println("Result:"+String.valueOf(result));
+                        System.out.println("Method inputs:"+String.valueOf(stringToCalculate));
+                        
+                        // Set the i+1 item on the list equal to the result found above . 
+                        listWithNumbers.set(i+1, String.valueOf(result));
+                    }
+
+                    // Clear the lists after calculating the result . 
+                    txtForCalculation.setText(String.valueOf(result));
+                    listWithNumbers.clear();
+                    Operators.clear();
+                    state = true;
                 }
-
-                // Clear the lists after calculating the result . 
-                txtForCalculation.setText(String.valueOf(result));
-                listWithNumbers.clear();
-                Operators.clear();
-                state = true;
+                 else
+                {
+                    System.out.println("\t\t\t\tSyntax Error");
+                    JOptionPane.showMessageDialog(this,"Syntax Error","Error",JOptionPane.ERROR_MESSAGE);
+                }
             }
             else
             {
@@ -478,13 +480,13 @@ public class Calculator extends javax.swing.JFrame {
                 if(txtForCalculation.getText().matches(reg))
                 {
                     number2 = Double.parseDouble(txtForCalculation.getText());
-                    String calculateThis = String.valueOf(number1)+operation+String.valueOf(number2);
+                    String calculateThis = String.valueOf(number1)+operator+String.valueOf(number2);
 
                     count = calculateResult(calculateThis);
                     txtForCalculation.setText(String.valueOf(count));
                     state = true;
                 }
-                else JOptionPane.showMessageDialog(this,"Syntax error");
+                else JOptionPane.showMessageDialog(this,"Error","Error",JOptionPane.ERROR_MESSAGE);
             
                               
             }
@@ -506,20 +508,23 @@ public class Calculator extends javax.swing.JFrame {
 
     private void OperatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OperatorActionPerformed
         // TODO add your handling code here:
-        if(txtForCalculation.getText().matches(reg))
-        {
-            if( Mode.equals("Normal") )
+        if( Mode.equals("Normal") )
             {
-                // Get operator from evt
-                // Store first number
-                // Clear text
-                operation = evt.getActionCommand();
-                number1 = Double.parseDouble(txtForCalculation.getText());
-                txtForCalculation.setText("");
+                if(txtForCalculation.getText().matches(reg))
+                {
+                    // Get operator from evt
+                    // Store first number
+                    // Clear text
+                    operator = evt.getActionCommand();
+                    number1 = Double.parseDouble(txtForCalculation.getText());
+                    txtForCalculation.setText("");
+                }
+                else JOptionPane.showMessageDialog(this,"Syntax Error","Error",JOptionPane.ERROR_MESSAGE);
+
             }
             else txtForCalculation.setText(txtForCalculation.getText()+evt.getActionCommand());
-        }
-        else JOptionPane.showMessageDialog(this,"Syntax Error");
+        
+        
     }//GEN-LAST:event_OperatorActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -531,12 +536,10 @@ public class Calculator extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void txtForCalculationKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtForCalculationKeyTyped
-        String  regex1 = "[\\d.]";
-        String  regex2 = null;
+        String  regex1 = "[\\d\\-\\+\\/\\*().]";
         if(Mode.equals("Expert"))
         {
-            regex2 = "[\\-\\+\\/\\*().]";
-            if(!String.valueOf(evt.getKeyChar()).matches(regex1) && !String.valueOf(evt.getKeyChar()).matches(regex2))
+            if(!String.valueOf(evt.getKeyChar()).matches(regex1))
             {
                 evt.consume();   
             }
@@ -593,6 +596,7 @@ public class Calculator extends javax.swing.JFrame {
         
         while(flag)
         {
+            // Find the indexes of left and right brackets .
             indexLeft  = eval.indexOf("(", indexLeft);
             indexRight = eval.indexOf(")",indexRight);
             
@@ -600,21 +604,26 @@ public class Calculator extends javax.swing.JFrame {
             System.out.println("indexRight:"+String.valueOf(indexRight));
             try
             {
+                // The operator between expressions is right of right bracket .
                 operator   = indexRight+1; 
                 
+                System.out.println("Operator:"+String.valueOf(operator));
+                // Calculate the substring in the brackets and add it to the list
+                // also add the operator if exists .
                 Double result = calculateResult(eval.substring(indexLeft+1,indexRight));
-                
                 listWithNumbers.add(String.valueOf(result));
                 Operators.add(String.valueOf(eval.charAt(operator)));
                 
+                // Increment by one to find the next bracket .
                 indexLeft++;
                 indexRight++;
                 
+                // If no char next to right bracket
+                // throw an exception and break the loop .
                 eval.charAt(indexRight+1); // Throws exception
             }
             catch(Exception e) {break;}
         }
-        
         
     }
     
@@ -679,6 +688,5 @@ public class Calculator extends javax.swing.JFrame {
     private javax.swing.JButton btnZero;
     private javax.swing.JTextField txtForCalculation;
     private javax.swing.JTextField txtMode;
-    private javax.swing.JTextField txtWholeExpression;
     // End of variables declaration//GEN-END:variables
 }
